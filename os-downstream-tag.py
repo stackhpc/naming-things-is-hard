@@ -6,6 +6,7 @@ OpenStack project, then creates a tag and pushes it to the downstream
 repository.
 """
 
+from __future__ import print_function
 import argparse
 import subprocess
 import sys
@@ -20,7 +21,7 @@ def rev_parse(ref):
 
 
 def fetch(remote):
-    print "Fetching from", remote
+    print("Fetching from", remote)
     cmd = ["git", "fetch", remote]
     return subprocess.check_output(cmd).strip()
 
@@ -33,18 +34,18 @@ def most_recent_tag(ref):
 def merge_base(ref1, ref2):
     cmd = ["git", "merge-base", ref1, ref2]
     result = subprocess.check_output(cmd).strip()
-    print "Merge base of", ref1, "and", ref2, "is", result
+    print("Merge base of", ref1, "and", ref2, "is", result)
     return result
 
 
 def add_tag(tag, ref):
-    print "Adding tag", tag, "to", ref
+    print("Adding tag", tag, "to", ref)
     cmd = ["git", "tag", tag, ref]
     return subprocess.check_output(cmd).strip()
 
 
 def push(remote, branch):
-    print "Pushing branch", branch, "to remote", remote
+    print("Pushing branch", branch, "to remote", remote)
     cmd = ["git", "push", remote, branch]
     return subprocess.check_output(cmd).strip()
 
@@ -86,16 +87,16 @@ def main():
     downstream_tag_ref = rev_parse(downstream_tag)
 
     if downstream_tag_ref == downstream_ref:
-        print "Latest downstream commit is already tagged as", downstream_tag
+        print("Latest downstream commit is already tagged as", downstream_tag)
         return
 
     if downstream_tag.startswith(downstream_prefix):
-        print "Found downstream tag", downstream_tag
+        print("Found downstream tag", downstream_tag)
         downstream_tag_without_suffix = downstream_tag[len(downstream_prefix):]
         downstream_base, downstream_patch = downstream_tag_without_suffix.split('-')
     else:
         downstream_base, downstream_patch = downstream_tag, 0
-        print "Found no downstream tag - basing off of upstream tag", downstream_base
+        print("Found no downstream tag - basing off of upstream tag", downstream_base)
 
     merge_base_ref = merge_base(upstream_ref, downstream_ref)
     upstream_tag = most_recent_tag(merge_base_ref)
