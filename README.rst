@@ -31,3 +31,8 @@ Tools
     Determines an appropriate version to assign to a downstream fork of an
     OpenStack project, then creates a tag and pushes it to the downstream
     repository.
+
+``os-upstream-sync.py``
+    Syncs a downstream fork of an OpenStack project with upstream. A new branch
+    is created for the sync, on which the branches are merged, before being
+    pushed to the downstream repository.
