@@ -92,21 +92,27 @@ def main():
 
     if downstream_tag.startswith(downstream_prefix):
         print("Found downstream tag", downstream_tag)
-        downstream_tag_without_suffix = downstream_tag[len(downstream_prefix):]
-        downstream_base, downstream_patch = downstream_tag_without_suffix.split('-')
+        downstream_tag_without_prefix = downstream_tag[len(downstream_prefix):]
+        dotted_split = downstream_tag_without_prefix.split('.')
+        if len(dotted_split) != 4:
+            print("Unable to parse most recent downstream tag", downstream_tag)
+            sys.exit(1)
+        downstream_base = ".".join(dotted_split[:3])
+        downstream_patch = int(dotted_split[3])
     else:
         downstream_base, downstream_patch = downstream_tag, 0
         print("Found no downstream tag - basing off of upstream tag", downstream_base)
 
     merge_base_ref = merge_base(upstream_ref, downstream_ref)
     upstream_tag = most_recent_tag(merge_base_ref)
+    print("Most recent upstream tag:", upstream_tag)
 
     if downstream_base == upstream_tag:
         new_patch = int(downstream_patch) + 1
     else:
         new_patch = 1
 
-    new_tag = "{}{}-{}".format(downstream_prefix, upstream_tag, new_patch)
+    new_tag = "{}{}.{}".format(downstream_prefix, upstream_tag, new_patch)
     add_tag(new_tag, downstream_ref)
 
     push(downstream_remote, new_tag)
