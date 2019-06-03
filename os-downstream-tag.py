@@ -17,18 +17,21 @@ DEFAULT_RELEASE = "rocky"
 
 def rev_parse(ref):
     cmd = ["git", "rev-parse", ref]
-    return subprocess.check_output(cmd).strip()
+    output = subprocess.check_output(cmd)
+    return output.decode(encoding=sys.stdout.encoding).strip()
 
 
 def fetch(remote):
     print("Fetching from", remote)
     cmd = ["git", "fetch", remote]
-    return subprocess.check_output(cmd).strip()
+    output = subprocess.check_output(cmd)
+    return output.decode(encoding=sys.stdout.encoding).strip()
 
 
 def most_recent_tag(ref):
     cmd = ["git", "describe", ref, "--abbrev=0", "--tags"]
-    return subprocess.check_output(cmd).strip()
+    output = subprocess.check_output(cmd)
+    return output.decode(encoding=sys.stdout.encoding).strip()
 
 
 def merge_base(ref1, ref2):
@@ -47,7 +50,8 @@ def add_tag(tag, ref):
 def push(remote, branch):
     print("Pushing branch", branch, "to remote", remote)
     cmd = ["git", "push", remote, branch]
-    return subprocess.check_output(cmd).strip()
+    output = subprocess.check_output(cmd)
+    return output.decode(encoding=sys.stdout.encoding).strip()
 
 
 def parse_args():
