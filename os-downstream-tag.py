@@ -8,11 +8,12 @@ repository.
 
 from __future__ import print_function
 import argparse
+import os
 import subprocess
 import sys
 
 
-DEFAULT_RELEASE = "rocky"
+DEFAULT_RELEASE = os.environ.get("DEFAULT_RELEASE", "wallaby")
 
 
 def rev_parse(ref):
