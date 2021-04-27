@@ -6,11 +6,12 @@ Syncs a downstream fork of an OpenStack project with upstream.
 
 from __future__ import print_function
 import argparse
+import os
 import subprocess
 import sys
 
 
-DEFAULT_RELEASE = "rocky"
+DEFAULT_RELEASE = os.environ.get("DEFAULT_RELEASE", "wallaby")
 DEFAULT_BRANCH_PREFIX = "merge-upstream-{}"
 DEFAULT_MESSAGE = "Merge upstream stable/{}"
 
