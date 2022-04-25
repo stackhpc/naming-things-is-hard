@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Determines an appropriate version to assign to a downstream fork of an
@@ -48,9 +48,9 @@ def add_tag(tag, ref):
     return subprocess.check_output(cmd).strip()
 
 
-def push(remote, branch):
-    print("Pushing branch", branch, "to remote", remote)
-    cmd = ["git", "push", remote, branch]
+def push_tag(remote, tag):
+    print("Pushing tag", tag, "to remote", remote)
+    cmd = ["git", "push", remote, tag]
     output = subprocess.check_output(cmd)
     return output.decode(encoding=sys.stdout.encoding).strip()
 
@@ -58,7 +58,7 @@ def push(remote, branch):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--downstream-remote", default="stackhpc",
-                        help="Name of the upstream git remote. Default is "
+                        help="Name of the downstream git remote. Default is "
                              "'stackhpc'")
     parser.add_argument("-p", "--prefix", default="stackhpc/",
                         help="Prefix for downstream tags. "
@@ -120,7 +120,7 @@ def main():
     new_tag = "{}{}.{}".format(downstream_prefix, upstream_tag, new_patch)
     add_tag(new_tag, downstream_ref)
 
-    push(downstream_remote, new_tag)
+    push_tag(downstream_remote, new_tag)
 
 
 if __name__ == "__main__":
