@@ -30,7 +30,7 @@ def fetch(remote):
 
 
 def most_recent_tag(ref):
-    cmd = ["git", "describe", ref, "--abbrev=0", "--tags"]
+    cmd = ["git", "describe", ref, "--exclude=*[a-z]", "--abbrev=0", "--tags"]
     output = subprocess.check_output(cmd)
     return output.decode(encoding=sys.stdout.encoding).strip()
 
@@ -85,8 +85,8 @@ def main():
     downstream_remote = parsed_args.downstream_remote
     downstream_prefix = parsed_args.prefix
 
-    # fetch(upstream_remote)
-    # fetch(downstream_remote)
+    fetch(upstream_remote)
+    fetch(downstream_remote)
 
     upstream_branch = "stable/{}".format(release)
     upstream_ref = rev_parse("{}/{}".format(upstream_remote, upstream_branch))
@@ -132,13 +132,12 @@ def main():
             print("Found a hidden tag that is infront of our new patch")
 
     new_tag = "{}{}.{}".format(downstream_prefix, upstream_tag, new_patch)
-    
 
-    print(f'new tag: {new_tag}')
+    print(new_tag)
 
     add_tag(new_tag, downstream_ref)
 
-    # push_tag(downstream_remote, new_tag)
+    push_tag(downstream_remote, new_tag)
 
 
 if __name__ == "__main__":
