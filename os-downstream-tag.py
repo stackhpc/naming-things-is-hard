@@ -35,17 +35,16 @@ def most_recent_tag(ref):
     return output.decode(encoding=sys.stdout.encoding).strip()
 
 
-def get_latest_hidden_tag(downstream_prefix, upstream_tag):
-    cmd = ["git", "tag", "-l", f"{downstream_prefix}{upstream_tag}.*", "--sort=-v:refname"]
-    output = subprocess.check_output(cmd)
-    return output.decode(encoding=sys.stdout.encoding).splitlines()[0] if len(output) > 0 else None
-
-
 def merge_base(ref1, ref2):
     cmd = ["git", "merge-base", ref1, ref2]
     result = subprocess.check_output(cmd).strip()
     print("Merge base of", ref1, "and", ref2, "is", result)
     return result
+
+
+def tag_exists(tag):
+    cmd = ["git", "tag", "-l", tag]
+    return False if not subprocess.check_output(cmd) else True
 
 
 def add_tag(tag, ref):
@@ -123,18 +122,12 @@ def main():
     else:
         new_patch = 1
 
-    newest_hidden_tag = get_latest_hidden_tag(downstream_prefix, upstream_tag)
-
-    if newest_hidden_tag:
-        hidden_patch = int(newest_hidden_tag.split(".")[-1])
-        if new_patch <= hidden_patch:
-            new_patch = hidden_patch + 1
-            print("Found a hidden tag that is infront of our new patch")
-
     new_tag = "{}{}.{}".format(downstream_prefix, upstream_tag, new_patch)
 
-    print(new_tag)
-
+    if tag_exists(new_tag):
+        print(f'Error: {new_tag} already exists as an unreachable tag, please delete and retry')
+        sys.exit(1)
+    
     add_tag(new_tag, downstream_ref)
 
     push_tag(downstream_remote, new_tag)
