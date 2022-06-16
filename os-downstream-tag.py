@@ -30,7 +30,7 @@ def fetch(remote):
 
 
 def most_recent_tag(ref):
-    cmd = ["git", "describe", ref, "--abbrev=0", "--tags"]
+    cmd = ["git", "describe", ref, "--exclude=*[a-z]", "--abbrev=0", "--tags"]
     output = subprocess.check_output(cmd)
     return output.decode(encoding=sys.stdout.encoding).strip()
 
@@ -40,6 +40,11 @@ def merge_base(ref1, ref2):
     result = subprocess.check_output(cmd).strip()
     print("Merge base of", ref1, "and", ref2, "is", result)
     return result
+
+
+def tag_exists(tag):
+    cmd = ["git", "tag", "-l", tag]
+    return False if not subprocess.check_output(cmd) else True
 
 
 def add_tag(tag, ref):
@@ -118,6 +123,11 @@ def main():
         new_patch = 1
 
     new_tag = "{}{}.{}".format(downstream_prefix, upstream_tag, new_patch)
+
+    if tag_exists(new_tag):
+        print(f'Error: {new_tag} already exists as an unreachable tag, please delete and retry')
+        sys.exit(1)
+    
     add_tag(new_tag, downstream_ref)
 
     push_tag(downstream_remote, new_tag)
