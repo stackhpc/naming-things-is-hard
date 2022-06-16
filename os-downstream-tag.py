@@ -13,7 +13,7 @@ import subprocess
 import sys
 
 
-DEFAULT_RELEASE = os.environ.get("DEFAULT_RELEASE", "victoria")
+DEFAULT_RELEASE = os.environ.get("DEFAULT_RELEASE", "wallaby")
 
 
 def rev_parse(ref):
