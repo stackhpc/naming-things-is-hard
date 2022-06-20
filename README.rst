@@ -2,7 +2,8 @@
 Naming Things is Hard
 =====================
 
-Tools for versioning and tagging software.
+Tools for versioning, tagging and maintaining OpenStack source code repository
+forks.
 
 Versioning
 ==========
@@ -26,6 +27,12 @@ Versions
 
 Tools
 =====
+
+``os-cherry-pop.py``
+    Proposes a list of downstream patches to cherry pick for a new release
+    branch. The list is generated based on the downstream patches in a previous
+    release, and accounts for patches that have been merged into the new
+    release. It also looks for newer versions of a patch on later branches.
 
 ``os-downstream-tag.py``
     Determines an appropriate version to assign to a downstream fork of an
