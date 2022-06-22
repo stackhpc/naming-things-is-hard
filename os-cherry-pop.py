@@ -178,6 +178,9 @@ def cherry_pop(candidates, release, previous_release, new_branch_commits, later_
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument("-b", "--branch-prefix", default="stackhpc",
+                        help="Name of the prefix to apply to downstream "
+                             "branches. Default is 'stackhpc'")
     parser.add_argument("-d", "--downstream-remote", default="stackhpc",
                         help="Name of the upstream git remote. Default is "
                              "'stackhpc'")
@@ -195,6 +198,7 @@ def parse_args():
 
 def main():
     parsed_args = parse_args()
+    branch_prefix = parsed_args.branch_prefix
     previous_release = parsed_args.previous_release
     release = parsed_args.release
     upstream_remote = parsed_args.upstream_remote
@@ -221,10 +225,10 @@ def main():
             later_branches.append(branch)
     later_branches.append("master")
 
-    previous_branch = "stackhpc/{}".format(previous_release)
+    previous_branch = "{}/{}".format(branch_prefix, previous_release)
     previous_ref = rev_parse("{}/{}".format(downstream_remote, previous_branch))
 
-    new_branch = "stackhpc/{}".format(release)
+    new_branch = "{}/{}".format(branch_prefix, release)
     new_ref = rev_parse("{}/{}".format(downstream_remote, new_branch))
 
     # Downstream patches on previous branch.
