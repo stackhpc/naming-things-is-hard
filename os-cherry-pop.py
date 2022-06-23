@@ -182,7 +182,7 @@ def parse_args():
                         help="Name of the prefix to apply to downstream "
                              "branches. Default is 'stackhpc'")
     parser.add_argument("-d", "--downstream-remote", default="stackhpc",
-                        help="Name of the upstream git remote. Default is "
+                        help="Name of the downstream git remote. Default is "
                              "'stackhpc'")
     parser.add_argument("-p", "--previous-release",
                         help="Name of the previous OpenStack release. "
