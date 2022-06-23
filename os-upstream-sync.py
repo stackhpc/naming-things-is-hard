@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Syncs a downstream fork of an OpenStack project with upstream.

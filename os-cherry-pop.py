@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Proposes a list of downstream patches to cherry pick for a new release
