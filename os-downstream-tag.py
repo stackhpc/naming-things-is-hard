@@ -110,8 +110,21 @@ def main():
     fetch(upstream_remote)
     fetch(downstream_remote)
 
-    upstream_branch = "stable/{}".format(release)
-    upstream_ref = rev_parse("{}/{}".format(upstream_remote, upstream_branch))
+    upstream_refs = [
+        "stable/{}".format(release),
+        "unmaintained/{}".format(release),
+        "{}-eol".format(release),
+    ]
+    for ref in upstream_refs:
+        print(f"Checking for existence of upstream {ref}")
+        try:
+            upstream_ref = rev_parse("{}/{}".format(upstream_remote, ref))
+            break
+        except subprocess.CalledProcessError:
+            print(f"Failed to find ref for {ref}")
+    else:
+        print("Unable to find any upstream branches or tags")
+        sys.exit(1)
 
     downstream_branch = "stackhpc/{}".format(release)
     downstream_ref = rev_parse("{}/{}".format(downstream_remote, downstream_branch))
