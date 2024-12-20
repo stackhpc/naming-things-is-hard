@@ -111,14 +111,14 @@ def main():
     fetch(downstream_remote)
 
     upstream_refs = [
-        "stable/{}".format(release),
-        "unmaintained/{}".format(release),
+        "{}/stable/{}".format(upstream_remote, release),
+        "{}/unmaintained/{}".format(upstream_remote, release),
         "{}-eol".format(release),
     ]
     for ref in upstream_refs:
         print(f"Checking for existence of upstream {ref}")
         try:
-            upstream_ref = rev_parse("{}/{}".format(upstream_remote, ref))
+            upstream_ref = rev_parse(ref)
             break
         except subprocess.CalledProcessError:
             print(f"Failed to find ref for {ref}")
