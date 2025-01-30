@@ -114,7 +114,7 @@ def main():
         "{}/stable/{}".format(upstream_remote, release),
         "{}/unmaintained/{}".format(upstream_remote, release),
         "{}-eol".format(release),
-        str(release),
+        "{}/{}".format(upstream_remote, release),
     ]
     for ref in upstream_refs:
         print(f"Checking for existence of upstream {ref}")
