@@ -18,7 +18,7 @@ import subprocess
 import sys
 
 
-DEFAULT_RELEASE = os.environ.get("DEFAULT_RELEASE", "xena")
+DEFAULT_RELEASE = os.environ.get("DEFAULT_RELEASE", "2024.1")
 STABLE_PREFIX = "stable/"
 
 # Commit message parsing.
@@ -236,20 +236,27 @@ def main():
     upstream_branches = list_branches_on_remote(upstream_remote)
     upstream_branches.sort()
 
-    release_index = upstream_branches.index("%s%s" % (STABLE_PREFIX, release))
+    release_index = -1
+    if release == "master":
+        release_index = upstream_branches.index(release)
+    else:
+        release_index = upstream_branches.index("%s%s" % (STABLE_PREFIX, release))
 
     if not previous_release:
         previous_upstream_branch = upstream_branches[release_index - 1]
         previous_release = previous_upstream_branch[len(STABLE_PREFIX):]
 
-    upstream_branch = "stable/{}".format(previous_release)
+    upstream_branch = upstream_branch = "stable/{}".format(previous_release)
+    if release == "master":
+        upstream_branch = "master"
     upstream_ref = rev_parse("{}/{}".format(upstream_remote, upstream_branch))
 
     later_branches = []
-    for branch in upstream_branches[release_index + 1:]:
-        if branch.startswith(STABLE_PREFIX):
-            later_branches.append(branch)
-    later_branches.append("master")
+    if release != "master":
+        for branch in upstream_branches[release_index + 1:]:
+            if branch.startswith(STABLE_PREFIX):
+                later_branches.append(branch)
+        later_branches.append("master")
 
     previous_branch = "{}/{}".format(branch_prefix, previous_release)
     previous_ref = rev_parse("{}/{}".format(downstream_remote, previous_branch))
