@@ -18,7 +18,7 @@ import subprocess
 import sys
 
 
-DEFAULT_RELEASE = os.environ.get("DEFAULT_RELEASE", "xena")
+DEFAULT_RELEASE = os.environ.get("DEFAULT_RELEASE", "2024.1")
 STABLE_PREFIX = "stable/"
 
 # Commit message parsing.
