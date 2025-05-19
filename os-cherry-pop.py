@@ -218,6 +218,9 @@ def parse_args():
     parser.add_argument("-u", "--upstream-remote", default="origin",
                         help="Name of the upstream git remote. Default is "
                              "'origin'")
+    parser.add_argument("-m", "--copy-from-master", default=False, action="store_true",
+                        help="Copy patches from downstream master to new stable release.")
+
     return parser.parse_args()
 
 
@@ -229,6 +232,18 @@ def main():
     upstream_remote = parsed_args.upstream_remote
     downstream_remote = parsed_args.downstream_remote
     cherries_file = parsed_args.cherries_file
+
+    if parsed_args.copy_from_master:
+        master_upstream_ref = rev_parse("{}/master".format(upstream_remote))
+        master_downstream_ref = rev_parse("{}/{}/master".format(downstream_remote, branch_prefix))
+        candidates = list_commits(master_downstream_ref, master_upstream_ref)
+        print(master_downstream_ref, master_upstream_ref)   
+        new_branch = "{}/{}".format(branch_prefix, release)
+        new_ref = rev_parse("{}/{}".format(downstream_remote, new_branch))
+        new_branch_commits = list_commits(new_ref, master_downstream_ref)
+        later_branch_commits = []
+        cherry_pop(candidates, release, "master", new_branch_commits, later_branch_commits, cherries_file)
+        return
 
     fetch(upstream_remote)
     fetch(downstream_remote)
