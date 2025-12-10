@@ -24,8 +24,14 @@ def rev_parse(ref):
 
 
 def fetch(remote):
-    print("Fetching from", remote)
+    print(f"Fetching from {remote}")
     cmd = ["git", "fetch", remote]
+    output = subprocess.check_output(cmd)
+    return output.decode(encoding=sys.stdout.encoding).strip()
+
+def fetch_tags(remote):
+    print(f"Fetching tags from {remote}")
+    cmd = ["git", "fetch", "--tags", remote]
     output = subprocess.check_output(cmd)
     return output.decode(encoding=sys.stdout.encoding).strip()
 
@@ -109,6 +115,8 @@ def main():
 
     fetch(upstream_remote)
     fetch(downstream_remote)
+    fetch_tags(upstream_remote)
+    fetch_tags(downstream_remote)
 
     upstream_refs = [
         "{}/stable/{}".format(upstream_remote, release),
